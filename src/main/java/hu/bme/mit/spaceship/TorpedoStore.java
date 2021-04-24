@@ -18,7 +18,7 @@ public class TorpedoStore {
 
   private int torpedoCount = 0;
 
-  private Random rand; 
+  private Random rand; //make a variable
 
 
   public TorpedoStore(int numberOfTorpedos){
