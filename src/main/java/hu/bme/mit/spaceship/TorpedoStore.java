@@ -3,6 +3,8 @@ package hu.bme.mit.spaceship;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
 * Class storing and managing the torpedoes of a ship
@@ -16,19 +18,18 @@ public class TorpedoStore {
 
   private int torpedoCount = 0;
 
-  private Random rand = createRandom();
+  private Random rand; 
 
-  public Random createRandom(){
-    try{
-      return SecureRandom.getInstanceStrong();
-    } catch(NoSuchAlgorithmException e){
-      throw new Error("Creating random failed.");
-    }
-  }
 
   public TorpedoStore(int numberOfTorpedos){
     this.torpedoCount = numberOfTorpedos;
 
+    try{
+      rand = SecureRandom.getInstanceStrong();
+    } catch(NoSuchAlgorithmException e){
+      var logger = Logger.getLogger(TorpedoStore.class.getName());
+      logger.log(Level.WARNING, e.getMessage());
+    }
     // update failure rate if it was specified in an environment variable
     String failureEnv = System.getenv("IVT_RATE");
     if (failureEnv != null){
@@ -46,10 +47,11 @@ public class TorpedoStore {
       throw new IllegalArgumentException("numberOfTorpedos");
     }
 
-    boolean success = false;
+    var success = false;
 
     // simulate random overheating of the launcher bay which prevents firing
-    double r = this.rand.nextDouble();
+   
+    var r = this.rand.nextDouble();
 
     if (r >= FAILURE_RATE) {
       // successful firing
